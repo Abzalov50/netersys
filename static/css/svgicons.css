@@ -1,0 +1,18 @@
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.svg-icon path {
+  fill: #692e6d;
+}
+
+
+
+.svg-icon path.facebook:hover{fill:#4267B2}
+.svg-icon path.twitter:hover{fill:#1da1f2}
+.svg-icon path.youtube:hover{fill:#FF0000}
