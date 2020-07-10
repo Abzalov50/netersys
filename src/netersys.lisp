@@ -196,7 +196,7 @@ renewable energy"))
        ((:p) "Prenez connaissance avec nos membres, " ((:a :href "/about#members") "ici.")))
       (:section
        (:h1 "Nos stats")))))))))
-
+#|
 ;;; --------------------- A PROPOS
 (publish :path "/about"
     :content-type "text/html"
@@ -703,3 +703,4 @@ L'équation admet une solution double: 1.0"))
 		 '("netersys@gmail.com" "infos@netersys.com")
 		 :metadata metadata)))
   ))))
+|#
