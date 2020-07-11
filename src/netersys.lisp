@@ -1,68 +1,14 @@
 (defpackage :netersys
-  (:use :cl :net.aserve :net.html.generator)
-  (:export :start-netersys
-	   :generic-page
-	   :stop-netersys))
+  (:use :cl :net.aserve :net.html.generator
+	:netersys.web :netersys.utils)
+  (:export :generic-page
+	   :start-netersys
+	   :stop-netersys
+	   :*current-server*))
 
 (in-package :netersys)
 
 ;;(setf (html-mode) :html5)
-
-(setf *domain* "netersys.com")
-(setf *domain-ip* "172.105.81.235")
-;(set-subdomains nil)
-
-(defvar *domain* *domain*)
-(defvar *prj-dir* (asdf:component-pathname
-		   (asdf:find-system :netersys)))
-(setf *project-dir* *prj-dir*)
-(defvar *src-dir* (merge-pathnames #P"src/" *prj-dir*))
-(defvar *stic-dir* (merge-pathnames #P"static/" *prj-dir*))
-(setf *static-dir* *stic-dir*)
-(defvar *imgs-dir* (merge-pathnames #P"imgs/" *stic-dir*))
-(defvar *css-dir* (merge-pathnames #P"css/" *stic-dir*))
-(defvar *js-dir* (merge-pathnames #P"js/" *stic-dir*))
-
-(defvar *dir-match* `((img . ,*imgs-dir*)
-		      (js . ,*js-dir*)
-		      (css . ,*css-dir*)))
-
-(defparameter *cert* (merge-pathnames #P"certs/fullchain.pem" *static-dir*))
-(defparameter *privkey* (merge-pathnames #P"certs/privkey.pem" *static-dir*))
-
-;;; Start a socket server
-(defun start-netersys (&key (port 8080) (cert *cert*)
-			 (privkey *privkey*))
-  (start :port port))
-
-(defun stop-netersys ()
-  )
-
-(defun link (&optional (where 'loc) (sublink nil) (ac nil))
-  (concatenate 'string
-	       (if (eq where 'loc)
-		   (concatenate 'string *host-name*
-				(if sublink
-				    (concatenate 'string "/" sublink
-						 (if ac
-						     (concatenate 'string "#" ac)
-						     ""))
-				    ""))
-		   (if sublink
-		       sublink
-		       (error "A valid URL cannot be obtained from the given arguments")))))
-
-(defun path (where filename)
-  (let ((root (cdr (assoc where *dir-match*))))
-    (print root)
-    (merge-pathnames filename root)))
-
-(defmacro img (filename)
-  `(path 'img ,filename))
-(defmacro css (filename)
-  `(path 'css ,filename))
-(defmacro js (filename)
-  `(path 'js ,filename))
 
 (defmacro generic-page (title &body body)
   `(html
@@ -91,7 +37,8 @@ renewable energy"))
        ((:link :rel "stylesheet" :href "css/svgicons.css"))
        ((:link :rel "stylesheet" :href "css/main.css")))
       (:body       
-       	((:div :class "sticky-top social-and-lang row align-items-center justify-content-end d-flex"))
+       ((:div :class "sticky-top social-and-lang row align-items-center justify-content-end d-flex"))
+       
 	((:nav :class "navbar sticky-top navbar-expand-lg navbar-light bg-light")
 	 ((:a :id "logo" :class "navbar-brand" :href "/")
 	  ((:img :src "imgs/logo-netersys.png" :alt "logo-netersys")))
@@ -112,12 +59,15 @@ renewable energy"))
 	  ((:form :class "form-inline my-2 my-lg-0")
 	   ((:input :class "form-control mr-sm-2" :type "search" :placeholder "Recherche"))
 	   ((:button :class "btn btn-outline-success my-2 my-sm-0" :type "submit") "OK"))))
+
        ,@body
-       (:footer
-	((:div :class "main-content footer-main")
+       ;(:footer
+	((:footer :class "main-content footer-main")
 	 ((:div :id "footer-menu"))
 	 ((:div :id "copyright")
-	  "Copyright &copy; 2019-2020 " "netersys" ". Tous droits réservés.")))
+	  "Copyright &copy; 2019-2020 " "netersys" ". Tous droits réservés."))
+;)
+
        ;; Script area
        
        ((:script :src "https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -144,6 +94,14 @@ renewable energy"))
 
        ))))
 
+(publish :path "/"
+    :content-type "text/html"
+    :function
+    #'(lambda (req ent)
+	(with-http-response (req ent)
+           (with-http-body (req ent)
+  (html (generic-page "Accueil"))))))
+
 ;;; --------------------- ACCUEIL
 (publish :path "/"
     :content-type "text/html"
@@ -162,15 +120,15 @@ renewable energy"))
        ((:li :data-target "#home-carousel" :data-slide-to "1")))
       ;; Carousel slides
       ((:div :class "carousel-inner" :role "listbox")
-       #|
+       
        ((:div :class "carousel-item active")
 	((:div :class "view")
-	 (:img :class "d-block w-100" :height "500px"
+	 ((:img :class "d-block w-100" :height "500px"
 	       :src "/imgs/flyer-bootcampRO2020.png"
-	       :alt "Prospectus Boot Camp RO 2020")
-	 (:div :class "mask rgba-black-light")))
-|#
-       ((:div :class "carousel-item active")
+	       :alt "Prospectus Boot Camp RO 2020"))
+	 ((:div :class "mask rgba-black-light"))))
+
+      ((:div :class "carousel-item active")
 	((:div :class "view")
 	 ((:img :class "d-block w-100" :height "500px"
 	       :src "/imgs/home-banner.jpg"
@@ -196,7 +154,7 @@ renewable energy"))
        ((:p) "Prenez connaissance avec nos membres, " ((:a :href "/about#members") "ici.")))
       (:section
        (:h1 "Nos stats")))))))))
-#|
+
 ;;; --------------------- A PROPOS
 (publish :path "/about"
     :content-type "text/html"
@@ -703,4 +661,3 @@ L'équation admet une solution double: 1.0"))
 		 '("netersys@gmail.com" "infos@netersys.com")
 		 :metadata metadata)))
   ))))
-|#

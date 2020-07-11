@@ -14,4 +14,4 @@
 				:depends-on ("utils"))
 			 (:file "netersys"
 				:depends-on ("utils" "web")))))
-  :depends-on (aserve))
+  :depends-on (aserve cl+ssl))
