@@ -10,12 +10,24 @@
 
 ;;(setf (html-mode) :html5)
 
+;;; Directories
+(publish-directory :prefix "/assets"
+		   :destination (list (namestring *js-dir*)
+				      (namestring *css-dir*))
+		   :host *domain*)
+
+(publish-directory :prefix "/assets/imgs"
+		   :destination (namestring *imgs-dir*)
+		   :compress nil
+		   :host *domain*)
+
+;;; HTML Pages
 (defmacro generic-page (title &body body)
   `(html
      ((:html :lang "fr")
       (:head
        ((:script :type "text/javascript" :src "https://www.googletagmanager.com/gtag/js?id=UA-160220482-1" :async t))
-       ((:script :type "text/javascript":src "/js/gtag.js"))
+       ((:script :type "text/javascript":src "/assets/gtag.js"))
        (:title ,title " | netersys")
        ((:meta :charset "utf-8"))
        ((:meta :name "viewport" :content "width=device-width, initial-scale=1, shrink-to-fit=no"))
@@ -23,7 +35,7 @@
        ((:meta :name "description" :content "Open energy data platform and energy management system"))
        ((:meta :name "keywords" :content "energy management system, optimization, optimal control, energy,
 renewable energy"))
-       ((:link :rel "shortcut icon" :href "imgs/favicon.png"))
+       ((:link :rel "shortcut icon" :href "/assets/imgs/favicon.png"))
        ;;(:link :rel "stylesheet" :href "css/linearicons.css")
        ;;(:link :rel "stylesheet" :href "css/font-awesome.min.css")
        ((:link :rel "stylesheet" :href "https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"))
@@ -34,14 +46,14 @@ renewable energy"))
 	      :href "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.0/codemirror.min.css"))
        ((:link :rel "stylesheet"
 	      :href "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.0/theme/blackboard.min.css"))
-       ((:link :rel "stylesheet" :href "css/svgicons.css"))
-       ((:link :rel "stylesheet" :href "css/main.css")))
+       ((:link :rel "stylesheet" :href "/assets/svgicons.css"))
+       ((:link :rel "stylesheet" :href "/assets/main.css")))
       (:body       
        ((:div :class "sticky-top social-and-lang row align-items-center justify-content-end d-flex"))
        
 	((:nav :class "navbar sticky-top navbar-expand-lg navbar-light bg-light")
 	 ((:a :id "logo" :class "navbar-brand" :href "/")
-	  ((:img :src "imgs/logo-netersys.png" :alt "logo-netersys")))
+	  ((:img :src "/assets/imgs/logo-netersys.png" :alt "logo-netersys")))
 	 ((:button :class "navbar-toggler collapsed" :type "button" :data-toggle "collapse"
 		   :data-target "#navbarTogglerDemo02" :aria-controls "navbarTogglerDemo01"
 		   :aria-expanded "false" :aria-label "Toggle navigation")
@@ -87,7 +99,7 @@ renewable energy"))
 		:src "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.0/codemirror.min.js"))
        ((:script :type "text/javascript"
 		:src "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.0/mode/python/python.min.js"))
-       ((:script :type "text/javascript" :src "/js/main.js"))
+       ((:script :type "text/javascript" :src "/assets/main.js"))
        ;;(:script :type "text/javascript" :src "https://code.jquery.com/jquery-3.4.1.min.js")
        ;;(:script :type "text/javascript" :src "https://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
        ;;(:script :src "https://maps.googleapis.com/maps/api/js?key AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA")
@@ -103,7 +115,7 @@ renewable energy"))
   (html (generic-page "Accueil"))))))
 
 ;;; --------------------- ACCUEIL
-(publish :path "/"
+(publish :path "/" :host *domain*
     :content-type "text/html"
     :function
     #'(lambda (req ent)
@@ -124,14 +136,14 @@ renewable energy"))
        ((:div :class "carousel-item active")
 	((:div :class "view")
 	 ((:img :class "d-block w-100" :height "500px"
-	       :src "/imgs/flyer-bootcampRO2020.png"
+	       :src "/assets/imgs/flyer-bootcampRO2020.png"
 	       :alt "Prospectus Boot Camp RO 2020"))
 	 ((:div :class "mask rgba-black-light"))))
 
       ((:div :class "carousel-item active")
 	((:div :class "view")
 	 ((:img :class "d-block w-100" :height "500px"
-	       :src "/imgs/home-banner.jpg"
+	       :src "/assets/imgs/home-banner.jpg"
 	       :alt "African nature"))
 	 ((:div :class "mask rgba-black-strong")))
 	((:div :class "carousel-caption about-content blog-header-content")
@@ -156,7 +168,7 @@ renewable energy"))
        (:h1 "Nos stats")))))))))
 
 ;;; --------------------- A PROPOS
-(publish :path "/about"
+(publish :path "/about" :host *domain*
     :content-type "text/html"
     :function
     #'(lambda (req ent)
@@ -177,13 +189,13 @@ renewable energy"))
        (:h1 "Sur nos membres")
        ((:div :class "card-columns")
 	((:div :class "card")
-	 ((:img :src "/imgs/arnold.jpg" :class "card-img-top" :alt "..."))
+	 ((:img :src "/assets/imgs/arnold.jpg" :class "card-img-top" :alt "..."))
 	 ((:div :class "card-body")
 	  ((:h5 :class "card-title") "Arnold N'GORAN")
 	  ((:p :class "card-text") "28 ans, diplômé Ingénieur de conception en génie énergétique de l'Institut National Polytechnique Félix HOUPHOUËT-BOIGNY (INPHB, Côte d'Ivoire), Master ès Science et Technologie des énergies renouvelables de l'Ecole polytechnique (Paris) et bientôt Docteur en Contrôle, Optimisation et Prospective de MINES ParisTech." (:br) "Je totalise 4 ans d'expérience dans l'optimisation des systèmes énergétiques, principalement des microgrids à énergies renouvelables. Je souhaite mettre mon expérience au service de mon pays, la Côte d'Ivoire, et de toute l'Afrique." (:br) "Je suis un grand fan de programmation Lisp et d'open source :)")
 	  ((:a :href "https://www.linkedin.com/in/arnold-n-goran-90b35088/" :class "btn btn-primary") "Savoir plus")))
 	((:div :class "card")
-	 ((:img :src "/imgs/yves.jpg" :class "card-img-top" :alt "..."))
+	 ((:img :src "/assets/imgs/yves.jpg" :class "card-img-top" :alt "..."))
 	 ((:div :class "card-body")
 	  ((:h5 :class "card-title") "Yves SAHI")
 	  ((:p :class "card-text") "Né le 13/08/1989 à GOUEKANGOUINE, j'ai eu un parcours exceptionnel au Lycée Moderne de Guiglo où j'ai obtenu le BAC C. J'intègre alors l'Institut National Polytechnique Félix HOUPHOUËT-BOIGNY (INPHB, Côte d'Ivoire) où, après 2 années de classes préparatoires MP/MPSI et 3 années de cycle Ingénieur, j'obtiens le Diplôme d'Etat d'Ingénieur de conception en Génie Energétique." (:br)
@@ -193,7 +205,7 @@ selon les standards PMI et en Management Essentials à HARVARD BUSINESS SCHOOL."
 "Aujourd'hui, mon challenge est plus que jamais de mettre mon expérience au service de mon pays, la Côte d'Ivoire.")
 	  ((:a :href "https://www.linkedin.com/in/yves-sahi-ba395766/" :class "btn btn-primary") "Savoir plus")))
 	((:div :class "card")
-	 ((:img :src "/imgs/david.jpg" :class "card-img-top" :alt "..."))
+	 ((:img :src "/assets/imgs/david.jpg" :class "card-img-top" :alt "..."))
 	 ((:div :class "card-body")
 	  ((:h5 :class "card-title") "David DAINGUI")
 	  ((:p :class "card-text") "Après un brillant parcours au Lycée Classique d'Abidjan où j'obtiens le BAC C, j'intègre l'Institut National Polytechnique Félix HOUPHOUËT-BOIGNY (INPHB, Côte d'Ivoire), d'où j'obtiens le diplôme d'Ingénieur de conception en génie énergétique." (:br) "Je totalise 4 ans d'expérience dans les métiers de l'ingénierie électrique (production, dispatching, transport, etc.). Aujourd'hui, je suis consacré au Management la QSE, toujours dans le secteur électrique." (:br) "Je suis proactif et volontaire pour apporter mon expérience au développement énergétique de la Côte d'Ivoire et de toute l'Afrique.")
@@ -214,12 +226,12 @@ selon les standards PMI et en Management Essentials à HARVARD BUSINESS SCHOOL."
        ((:h5) "Mars 2020, INP-HB, Yamoussoukro, Côte d'Ivoire")
        ((:div)
 	((:img :class "img-event"
-	      :src "/imgs/flyer-bootcampRO2020.png"
+	      :src "/assets/imgs/flyer-bootcampRO2020.png"
 	      :alt "Prospectus Boot Camp RO 2020"))
 	((:p) ((:span :class "see-more") ((:a :href "bootcampRO2020") "Cliquez ici")) " pour otenir le programme détaillé, le kit de préparation du Boot Camp, ..."))))))))))
 
 ;;; --------------------- BOOT CAMP RO 2020
-(publish :path "/bootcampRO2020"
+(publish :path "/bootcampRO2020" :host *domain*
     :content-type "text/html"
     :function
     #'(lambda (req ent)
@@ -613,7 +625,7 @@ L'équation admet une solution double: 1.0"))
 	)))))))))
 
 ;;; --------------------- CONTACT
-(publish :path "/contact"
+(publish :path "/contact" :host *domain*
     :content-type "text/html"
     :function
     #'(lambda (req ent)
@@ -645,7 +657,7 @@ L'équation admet une solution double: 1.0"))
 		     :placeholder "Votre Message *"
 		     :style "width: 100%; height: 150px;")))))))))))))
 
-(publish :path "/contact/send-message"
+(publish :path "/contact/send-message" :host *domain*
     :content-type "text/html"
     :function
     #'(lambda (req ent)

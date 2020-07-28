@@ -22,9 +22,9 @@
 (defvar *src-dir* (merge-pathnames #P"src/" *prj-dir*))
 (defvar *static-dir* (merge-pathnames #P"static/" *prj-dir*))
 ;;(setf *static-dir* *stic-dir*)
-(defvar *imgs-dir* (merge-pathnames #P"imgs/" *stic-dir*))
-(defvar *css-dir* (merge-pathnames #P"css/" *stic-dir*))
-(defvar *js-dir* (merge-pathnames #P"js/" *stic-dir*))
+(defvar *imgs-dir* (merge-pathnames #P"imgs/" *static-dir*))
+(defvar *css-dir* (merge-pathnames #P"css/" *static-dir*))
+(defvar *js-dir* (merge-pathnames #P"js/" *static-dir*))
 
 (defvar *dir-match* `((img . ,*imgs-dir*)
 		      (js . ,*js-dir*)

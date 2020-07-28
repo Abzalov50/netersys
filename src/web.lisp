@@ -4,13 +4,15 @@
 		:make-ssl-server-stream)
   (:export :start-netersys
 	   :stop-netersys
-	   :*current-server*))
+	   :*current-server*
+	   :*domain*))
 
 (in-package :netersys.web)
 
 (defvar *domain* "netersys.com")
 (defvar *domain-ip* "172.105.81.235")
 (defvar *current-server* nil)
+(setf net.aserve:*default-aserve-external-format* :utf-8)
 
 (defparameter *cert*
   (merge-pathnames #P"certs/fullchain.pem" *static-dir*))
@@ -18,7 +20,18 @@
   (merge-pathnames #P"certs/privkey.pem" *static-dir*))
 
 ;;; Start a socket server
-(defun start-netersys (&key (port 8080) (cert *cert*)
+(defun start-netersys (&key (port 80) (compressp nil) (cert *cert*)
+			 (privkey *privkey*)
+			 (external-format :utf-8)
+			 )
+  (setf *current-server*
+	(start :host *domain* :port port
+	       :ssl (namestring cert)
+	       :ssl-key (namestring privkey)
+	       :external-format external-format
+	       :compress compressp)))
+
+(defun start-netersys! (&key (port 8080) (cert *cert*)
 			 (privkey *privkey*))
   (setf *current-server*
 	(start :host *domain* :port port
